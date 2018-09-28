@@ -1,0 +1,8 @@
+[data-palladio-datapen-view] {
+	width: 100%;
+	padding-top: 5px;
+}
+
+[data-palladio-datapen-view] {
+	overflow: auto;
+}
