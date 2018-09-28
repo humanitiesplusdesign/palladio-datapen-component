@@ -76,7 +76,7 @@ angular.module('palladioDataPenComponent', ['palladio', 'palladio.services'])
 				showSettings: '=',
 				functions: '='
 			},
-			templateUrl : 'partials/palladio-datapen-component/template.html',
+			template : require('./template.html'),
 			link: {
 
 				pre: function (scope, element, attrs) {

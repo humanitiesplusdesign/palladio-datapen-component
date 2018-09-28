@@ -1,0 +1,1 @@
+import palladioDatapenView from './palladio-datapen-view'

@@ -6,6 +6,28 @@
     "gulp-order": "^1.1.1",
     "gulp-rename": "^1.2.2",
     "gulp-uglify": "^1.5.3",
-    "merge-stream": "^1.0.0"
-  }
+    "html-loader": "^0.5.5",
+    "merge-stream": "^1.0.0",
+    "webpack": "^4.20.2",
+    "webpack-cli": "^3.1.1"
+  },
+  "name": "palladio-datapen-component",
+  "version": "1.0.0",
+  "main": "src/palladio-datapen-view.js",
+  "dependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/humanitiesplusdesign/palladio-datapen-component.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/humanitiesplusdesign/palladio-datapen-component/issues"
+  },
+  "homepage": "https://github.com/humanitiesplusdesign/palladio-datapen-component#readme",
+  "description": ""
 }
