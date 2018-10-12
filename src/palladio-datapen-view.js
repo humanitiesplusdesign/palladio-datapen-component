@@ -1,4 +1,6 @@
-angular.module('palladioDataPenComponent', ['palladio', 'palladio.services'])
+import active from './active/active'
+
+angular.module('palladioDataPenComponent', ['palladio', 'palladio.services', 'palladioDataPenComponent.active'])
 	.run(['componentService', function(componentService) {
 		var compileStringFunction = function (newScope, options) {
 
@@ -6,7 +8,7 @@ angular.module('palladioDataPenComponent', ['palladio', 'palladio.services'])
 			newScope.tableHeight = newScope.height === undefined ? undefined : newScope.height;
 			newScope.functions = {};
 
-			var compileString = '<div class="with-settings" data-palladio-datapen-view-with-settings ';
+			var compileString = '<div class="with-settings" data-palladio-data-pen-view-with-settings ';
 			compileString += 'show-settings="showSettings" ';
 			compileString += 'functions=functions ';
 
@@ -37,7 +39,7 @@ angular.module('palladioDataPenComponent', ['palladio', 'palladio.services'])
 				xfilter: '=',
 				exportFunc: '='
 			},
-
+			template: require('./inner-template.html'),
 			link: function (scope, element, attrs) {
 
 				function refresh() {

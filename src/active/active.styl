@@ -1,0 +1,756 @@
+dp-active
+  display: inline-block
+  height: 600px
+  width: 100%
+
+  .popover
+    max-width: 600px
+    font-family: 'Calibre', sans-serif
+
+  .active-tooltip
+    position: absolute
+    background-color: rgba(#f4f4f4, 0.8)
+    color: #555555
+    margin-top: 1px
+    padding: 3px
+    padding-left: 6px
+    padding-right: 6px
+    border-radius: 2px
+    opacity: 0
+    pointer-events: none
+    border-radius: 10px
+
+  .circular-menu
+    box-shadow: 0px 1px 4px rgba(#000, 0.1)
+
+    ul
+      li
+        a
+          color: black
+
+          .text
+            position: absolute
+            opacity: 0
+
+
+    &:after
+      content: ''
+      box-sizing: border-box
+      position: absolute
+      width: 78px
+      height: 78px
+      // top: 50%;
+      // left: 50%;
+      border-radius: 100px
+      border: 1px solid #ffffff
+      box-shadow: inset 0px 1px 4px rgba(#000, 0.1)
+
+  .expand-icon, .reconcile-icon, .remove-icon, .link-icon, .properties-icon, .invert-icon, .gather-icon
+    padding: 16px
+    background-repeat: no-repeat
+    -webkit-backface-visibility: initial !important
+
+  .gather-icon
+    background-image: url('../images/active/node_menu/gather.svg')
+    background-position: 0 2px
+
+  .expand-icon
+    background-image: url('../images/active/node_menu/expand.svg')
+    background-position: 0 2px
+
+  .reconcile-icon
+    background-image: url('../images/active/node_menu/reconcile.svg')
+    background-position: 2px 5px
+
+  .remove-icon
+    background-image: url('../images/active/node_menu/remove.svg')
+    padding: 15px
+    background-position: 1px 7px
+
+  .ghost-icon
+    background-image: url('../images/active/node_menu/ghost.svg')
+    background-position: -4px 6px
+
+  .link-icon
+    background-image: url('../images/active/node_menu/link.svg')
+    background-position: -4px 6px
+
+  .properties-icon
+    background-image: url('../images/active/node_menu/properties.svg')
+    padding: 15px
+    background-position: 2px 6px
+
+  .invert-icon
+    background-image: url('../images/active/node_menu/invert.svg')
+    padding: 15px
+    background-position: 2px 4px
+
+  .circle-menu-tooltip
+    position: absolute
+    transform: translateX(-50%)
+    text-align: center
+    z-index: 1
+    background-color: rgba(#f4f4f4, 0.8)
+    color: #555555
+    padding: 3px 7px 3px 7px
+    border-radius: 4px
+    font-size: 1.05em
+    opacity: 0
+
+  .cold-node
+    font-size: 0.95em
+    margin-top: 10px
+    margin-left: 47px
+    margin-bottom: 10px
+    opacity: 0.5
+    cursor: pointer
+    margin-right: 15px
+    display: block
+
+  .resultType
+    width: 50px
+    display: inline-block
+    font-family: 'Roboto Mono', monospace
+    font-size: 0.75em
+    opacity: 0.5
+    text-align: right
+    margin-right: 8px
+    margin-bottom: -0.3em
+    text-overflow: ellipsis
+    overflow: hidden
+    white-space: nowrap
+
+  .resultActual
+    margin-bottom: 0
+
+  .resultSource
+    display: inline-block
+    font-family: 'Roboto Mono', monospace
+    font-size: 0.75em
+    margin-bottom: -0.3em
+    opacity: 0.5
+    margin-left: 8px
+    text-overflow: ellipsis
+    overflow: hidden
+    white-space: nowrap
+
+  .control-area
+    position: absolute
+    top: 66px
+    right: 10px
+    width: 4em
+    padding-top: 2em
+    padding-right: 3em
+    z-index: 2
+
+    .button-label
+      opacity: 0
+      position: absolute
+      width: 100px
+      left: -115px
+      margin-top: -20px
+      text-transform: none
+      text-align: right
+      color: #858585
+      font-size: 1em
+      pointer-events: none
+
+      &.visible
+        opacity: 1
+
+    .active-circle-button
+      width: 42px
+      height: 42px
+      border-radius: 100%
+      border: none
+      padding: 10px 14px
+      margin: 0 0 1em 0
+      background-color: #fff
+      box-shadow: 0px 1px 4px rgba(#000, 0.1)
+      transition: 0.1s
+      -webkit-transition: 0.1s
+      -moz-transition: 0.1s
+      -o-transition: 0.1s
+
+      &:focus
+        outline: 0
+
+      &:hover
+        background-color: #f9f9f9
+
+      &:active
+        background-color: #f5f5f5
+
+      &.button-active
+        box-shadow: 0 0 5px rgba(#466bd3, 0.7)
+
+      &.button-disabled
+        cursor: default !important
+        opacity: 0.4 !important
+        background-color: #fff !important
+        border: none !important
+
+      .view-options-icon
+        width: 24px
+        height: auto
+        margin-top: -2px
+        margin-left: -5px
+
+      .layers-icon
+        width: 19px
+        height: auto
+        margin-top: -2px
+        margin-left: -2px
+
+      .snapshots-icon
+        width: 19px
+        height: auto
+        margin-top: -5px
+        margin-left: -2px
+
+      .layouts-icon
+        width: 18px
+        height: auto
+        margin-top: -3px
+        margin-left: -1px
+
+  .active-options-popover
+    border: none
+    box-shadow: 0px 1px 4px rgba(#000, 0.1)
+
+    .arrow
+      display: none
+
+    h4
+      font-size: 1.2em
+      margin-bottom: 20px
+
+    .checkbox-title
+      margin-left: 7px
+      font-size: 1.1em
+
+    .option-description
+      color: #a4a4a4
+      font-size: 0.8em
+      margin-top: 3px
+      padding-left: 19px
+
+    .layer-description
+      color: #a4a4a4
+      font-size: 0.8em
+      // margin-top: 3px
+      // padding-left: 19px
+
+    .view-options-popover
+      .optionToggle
+        display: block
+
+      .linked-text
+        font-weight: 500
+        color: #83b5db
+
+      .unlinked-text
+        font-weight: 500
+        color: #e36b76
+
+    .layers-popover
+      width: 200px
+
+      ul
+        list-style: none
+        margin-left: -15px
+
+        .layer-row
+          margin-bottom: 10px
+          cursor: move
+
+          &:hover
+            background-color: rgba(#fbfbfb, 0.9)
+            padding: 4px 6px 6px 6px
+            box-shadow: 0 1px 4px rgba(#000, 0.2)
+            border-radius: 3px
+            width: 106%
+            margin-left: -3%
+            margin-top: -4px
+            margin-bottom: 4px
+            z-index: 3
+
+          .eye-switch
+            width: 18px
+            margin-top: -2px
+            margin-right: 7px
+            cursor: pointer
+
+            &.disabled
+              opacity: .15
+
+          .grip-lines
+            width: 15px
+            float: right
+            opacity: 0.4
+            margin-top: 6px
+
+    .snapshots-popover
+      width: 300px
+
+      .snapshot-name-input
+        width: 203px
+        height: 27px
+        outline: 0
+        padding-left: 10px
+        border: 1px solid rgba(#000, 0.3)
+        border-radius: 3px
+        margin-right: 10px
+        margin-left: 8px
+
+        &:focus
+          border: 1px solid rgba(#466bd3, 1)
+
+      .snapshot-save-button
+        position: relative
+        top: -1px
+        width: 68px
+        margin: 0
+
+        &:hover
+          opacity: 0.7
+
+      .no-snapshots
+        width: 100%
+        text-align: center
+        opacity: .5
+        font-size: 1.1em
+
+      .snapshot-list
+        max-height: 300px
+        overflow-y: scroll
+        margin-bottom: 5px
+
+        .snapshot-row
+          width: 100%
+          padding: 10px 5px 5px 10px
+          border-radius: 5px
+          margin-bottom: 5px
+
+          &:hover
+            background-color: rgba(#000, 0.03)
+
+          .snapshot-details-container
+            display: inline-block
+            max-width: 100%
+
+            .snapshot-name-label
+              display: block
+              font-size: 1.1em
+              margin-bottom: -3px
+              text-overflow: ellipsis
+              overflow: hidden
+              white-space: nowrap
+              cursor: pointer
+
+              &:focus, .edit-mode
+                background-color: #fff
+                border: 1px solid rgba(#000, 0.2)
+                border-radius: 3px
+                padding: 5px 7px 5px 7px
+                outline: 0
+                margin-bottom: 3px
+                text-overflow: none
+                overflow: none
+                white-space: none
+
+            .snapshot-entities-label
+              opacity: .4
+              margin-bottom: 0
+
+          .limit-width
+            max-width: 150px
+
+          .action-items-container
+            display: inline-block
+            float: right
+            display: none
+            padding-top: 7px
+            padding-right: 5px
+            &.visible
+              display: inline-block
+
+          .snapshot-option
+            display: inline-block
+            margin-left: 5px
+            text-transform: uppercase
+            font-weight: 500
+            opacity: .4
+            cursor: pointer
+
+            &:hover
+              opacity: 1
+
+          .snapshot-edit-options
+            display: inline-block
+            opacity: 1
+
+          .cancel-option, .delete-option
+            margin-left: 10px
+
+          .cancel-option
+            color: #8e8e8e !important
+            &:hover
+              color: #8e8e8e !important
+
+          .delete-option
+            color: #d24545
+
+            &:hover
+              color: #d24545
+
+    .layouts-popover {}
+
+  #stop-importing-button
+    box-shadow: 0 1px 5px rgba(#000, 0.15)
+    position: absolute
+    width: 140px
+    height: 34px
+    left: 50%
+    bottom: 130px
+    transform: translateX(-50%)
+    padding-bottom: 4px
+    border-radius: 34px
+    font-size: 1.1em
+    border: none
+    display: none
+
+    &:focus
+      outline: 0
+
+    &:hover
+      background-color: #f9f9f9
+
+    &:active
+      background-color: #f5f5f5
+
+    &.button-active
+      box-shadow: 0 0 5px rgba(#466bd3, 0.7)
+
+  .draggable-divider
+    top: -100%
+    left: 0%
+    margin-left: -3px
+    width: 6px
+    height: 300%
+    opacity: 0.5
+    background-color: gray
+    position: absolute
+    cursor: col-resize
+
+  .drag-tab
+    top: 49%
+    left: 0%
+    padding: 0.5em 1em 0.5em 1em
+    width: 30px
+    margin-left: -12px
+    height: 100px
+    background-color: gray
+    position: absolute
+    border-style: solid solid solid solid
+    border-width: 1px
+    border-color: black
+    border-radius: 3px 3px 3px 3px
+
+  .ui-grid
+    border-width: 0px
+    border-style: none
+
+  .main-table
+    height: 100%
+    width: 0%
+    position: absolute
+    padding-bottom: 6.5em
+    padding-top: 1.5em
+
+    .tableExport
+      float: right
+      margin-right: 20px
+      margin-top: 5px
+      color: #466bd3
+      border-bottom: 1px solid #466bd3
+      transition: 0.1s
+
+      &:hover
+        opacity: 0.7
+
+    .ng-isolate-scope
+      height: 100%
+
+      .tab-content
+        height: 100%
+
+        .tab-pane
+          height: 100%
+
+          .main-grid
+            height: 100%
+            width: 100%
+
+  .main-canvas
+    height: 600px
+    width: 100%
+    position: absolute
+    padding-bottom: 3em
+
+    .main-svg
+      height: 100%
+      width: 100%
+
+      .main-background
+        fill: #f4f4f4
+
+      .selection-rect
+        fill: rgba(200,200,200,0.5)
+        stroke: #333
+
+      .node
+        .node-circle
+          fill: #cbcbcb
+          stroke: #7a7a7a
+
+          &::after
+            content: ''
+            display: block
+            width: 30px
+            height: 30px
+            background-color: red
+
+        .search-backing
+          display: none
+          fill: rgba(125,220,240,0.75)
+          stroke: none
+
+        .search-result
+          display: inline
+        
+        .red
+          fill: #d9534f
+
+        .green
+          fill: #5cb85c
+
+        .blue
+          fill: #337ab7
+
+        .yellow
+          fill: #f0ad4e
+
+        .white
+          fill: #fff
+
+      .link
+        stroke-width: 1px
+        stroke: #b6b6b6
+
+      .new-link
+        pointer-events: none
+
+      @keyframes node-loading-animation
+        0%
+          opacity: 1
+
+        50%
+          opacity: 0.3
+
+        100%
+          opacity: 1
+
+      @keyframes node-jiggle
+        0%
+          transform: scale(0.95, 1.05)
+
+        50%
+          transform: scale(1.05, 0.95)
+
+        100%
+          transform: scale(0.95, 1.05)
+
+      .loading
+        -webkit-animation: node-loading-animation 0.7s infinite linear
+        animation: node-loading-animation 0.7s infinite linear
+
+      .jiggle
+        -webkit-animation: node-jiggle 0.4s infinite linear
+        animation: node-jiggle 0.4s infinite linear
+
+      .ghosted
+        opacity: 0.3
+
+      .linked
+        fill: #e36b76
+        stroke: #81393f
+
+      .unlinked
+        fill: #83b5db
+        stroke: #335c7b
+
+  .node-search
+    position: absolute
+    top: 100px
+    left: 100px
+    width: 250px
+
+    .input-group
+      width: 250px
+
+    .list-style-none
+      list-style: none
+      padding-left: 0
+
+    .result-type-container
+      margin-bottom: 10px
+
+    .result-type-container-loading
+      padding-left: 20px
+      padding-top: 3px
+      margin-bottom: 10px
+
+    .fake-typeahead
+      position: absolute
+      top: 100%
+      left: -40px !important
+      z-index: 1000
+      background-color: #fff !important
+      border-radius: 3px !important
+      // border: 1px solid rgba(0, 0, 0, 0.15) !important
+      border: none !important
+      box-shadow: 0px 1px 4px rgba(#000, 0.1) !important
+      -webkit-box-shadow: 0px 1px 4px rgba(#000, 0.1) !important
+      margin-top: 1em
+      min-width: 290px
+
+    .custom-popup-wrapper
+      position: absolute
+      top: 100%
+      left: -40px !important
+      z-index: 1000
+      display: none
+      background-color: #fff !important
+      border-radius: 3px !important
+      // border: 1px solid rgba(0, 0, 0, 0.15) !important
+      border: none !important
+      box-shadow: 0px 1px 4px rgba(#000, 0.1) !important
+      -webkit-box-shadow: 0px 1px 4px rgba(#000, 0.1) !important
+      margin-top: 1em
+      max-height: 400px
+      overflow-y: scroll
+
+      .active > a
+        background-color: rgba(#000, 0.03) !important
+        color: rgba(#000, 0.8)
+
+    .custom-popup-wrapper > .message
+      padding: 10px 20px
+      border-bottom: 1px solid #ddd
+      color: #868686
+
+    .custom-popup-wrapper > .dropdown-menu
+      position: static
+      float: none
+      display: block
+      min-width: 160px
+      background-color: transparent
+      border: none
+      border-radius: 0
+      box-shadow: none
+      margin-top: 0
+      padding-top: 0
+
+      li
+        cursor: pointer
+
+  .no-results
+    // margin-top: 0.7em
+    margin-left: 40px
+    margin-bottom: 0.7em
+    opacity: 0.5
+
+  .input-group
+    // border: 1px solid #ccc
+    box-shadow: 0px 1px 4px rgba(#000, 0.1)
+    border-radius: 5px
+
+    .input-group-addon
+      border: none
+      background-color: #fff
+
+      .addon-left
+        padding: 6px, 6px, 6px, 18px
+        border-top-left-radius: 7px
+        border-bottom-left-radius: 7px
+
+      .addon-right
+        border-top-right-radius: 7px
+        border-bottom-right-radius: 7px
+
+    .dismiss-icon
+      position: absolute
+      width: 12px
+      height: auto
+      right: 10px
+      top: 11px
+      opacity: 0.4
+
+    input.form-control
+      border: none
+      box-shadow: none
+      padding-left: 1px
+      padding-right: 0px
+      font-size: 1em
+
+      &:focus
+        box-shadow: none
+
+    @keyframes spinner
+      to
+        transform: rotate(360deg)
+
+    .spinner
+      display: inline-block
+      width: 13.5px
+      height: 15px
+      margin-left: 0px
+
+      &:before
+        content: ''
+        box-sizing: border-box
+        position: absolute
+        top: 50%
+        // left: 50%
+        width: 20px
+        height: 20px
+        margin-top: -10px
+        margin-left: -10px
+        border-radius: 50%
+        border: 2px solid rgba(#000, 0.1)
+        border-top-color: rgba(#000, 0.4)
+        animation: spinner 1s linear infinite
+        z-index: 10
+
+  /* **************** Table Grid styles ******************* */
+  .ui-grid-top-panel
+    background-color: red
+
+  .table-cell-pill
+    padding: 3px
+    border-radius: 2px
+    border-color: #ddd
+    border-style: solid 
+    border-width: 1px
+    margin-right: 3px
+    background-color: white
+
+  .type-pill
+    padding: 3px
+    border-radius: 5px
+    border-color: lightblue 
+    border-style: solid 
+    border-width: 1px
+    margin-right: 3px
+    background-color: lightblue

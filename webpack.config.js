@@ -16,7 +16,28 @@ module.exports = {
             attrs: [':data-src']
           }
         }
+      },
+      {
+        test: /\.pug$/,
+        use: {
+          loader: 'pug-loader'
+        }
+      },
+      {
+        test: /\.styl$/,
+        use: [
+          { loader: "style-loader" },
+          { loader: "css-loader" },
+          { loader: "stylus-loader" }
+        ]
+      },
+      {
+        test: /\.svg$/,
+        loader: 'url-loader?limit=65000&mimetype=image/svg+xml&name=public/fonts/[name].[ext]'
       }
     ]
+  },
+  devServer: {
+    watchContentBase: true
   }
 };
