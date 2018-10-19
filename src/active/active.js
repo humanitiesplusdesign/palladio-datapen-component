@@ -1,7 +1,7 @@
 /* global angular d3 */
 
 angular.module('palladioDataPenComponent.active', [])
-  .directive('dpActive', ['palladioService', function (palladioService) {
+  .directive('dpActive', ['palladioService', 'dataService', function (palladioService, dataService) {
     return {
       scope: {},
       template: require('./active.pug'),
@@ -156,6 +156,31 @@ angular.module('palladioDataPenComponent.active', [])
           // )
 
           $ctrl.updateCanvasSize()
+        }
+
+        $ctrl.nodeSearchResults = function (searchValue) {
+          let results = []
+          dataService.getFiles().forEach(file => {
+            let descriptionField = file.fields.filter(field => field.countDescription)[0];
+            let matches = file.data.filter(row => {
+              return Object.values(row).filter(value => {
+                return value.includes(searchValue)
+              }).length > 0
+            })
+            matches.forEach(match => {
+              results.push({
+                type: file.label,
+                value: match[descriptionField.key],
+                data: match
+              })
+            })
+          })
+          console.log(results)
+          return results
+        }
+
+        $ctrl.nodeSearchLabel = function (searchResult) {
+          return searchResult.value
         }
 
         $ctrl.$postLink = function () {
