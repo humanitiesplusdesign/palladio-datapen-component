@@ -8,7 +8,7 @@ angular.module('palladioDataPenComponent.active', [])
     return {
       scope: {},
       template: require('./active.pug'),
-      controller: ['$scope', '$document', '$timeout', function ActiveController($scope, $document, $timeout) {
+      controller: ['$scope', '$document', '$timeout', function ActiveController ($scope, $document, $timeout) {
         let $ctrl = this
         $scope.$ctrl = $ctrl
         $ctrl.radiusInitial = 1
@@ -16,6 +16,7 @@ angular.module('palladioDataPenComponent.active', [])
         $ctrl.radiusBounce = 4
         $ctrl.items = []
         $ctrl.selectedNodes = []
+        let dragSelection = []
 
         $ctrl.getCanvasSize = function () {
           let s = select('.main-svg')
@@ -62,6 +63,7 @@ angular.module('palladioDataPenComponent.active', [])
             // $ctrl.updateMenuTooltip()
 
             if (!$ctrl.currentlyAdding) {
+              $ctrl.nodeSearchSelected = ''
               $ctrl.nodeSearchOffsetTop = event.offsetY
               $ctrl.nodeSearchOffsetLeft = event.offsetX
               $ctrl.appendNode(sel, $ctrl.nodeSearchOffsetTop, $ctrl.nodeSearchOffsetLeft, 'addition-node')
@@ -94,73 +96,80 @@ angular.module('palladioDataPenComponent.active', [])
             .on('click', () => {
               if ($ctrl.linkEndFunction) $ctrl.linkEndFunction()
             })
-          // .call(d3.drag()
-          //   .on('start', () => {
-          //     this.$scope.$apply(() => {
-          //       this.menu.hide()
-          //       this.multiMenu.hide()
-          //       this.updateMenuTooltip()
-          //       this.nodeSearchRemove()
-          //       if (!d3.event.sourceEvent.shiftKey) {
-          //         this.selectedNodes = []
-          //       }
-          //       this.updateCanvas()
-          //     })
-          //     d3.select('.main-g')
-          //       .append('rect')
-          //       .classed('selection-rect', true)
-          //   })
-          //   .on('drag', () => {
-          //     if (d3.event.x - d3.event.subject.x < 0) {
-          //       d3.select('.selection-rect')
-          //         .attr('x', d3.event.x)
-          //         .attr('width', d3.event.subject.x - d3.event.x)
-          //     } else {
-          //       d3.select('.selection-rect')
-          //         .attr('x', d3.event.subject.x)
-          //         .attr('width', d3.event.x - d3.event.subject.x)
-          //     }
-          //     if (d3.event.y - d3.event.subject.y < 0) {
-          //       d3.select('.selection-rect')
-          //         .attr('y', d3.event.y)
-          //         .attr('height', d3.event.subject.y - d3.event.y)
-          //     } else {
-          //       d3.select('.selection-rect')
-          //         .attr('y', d3.event.subject.y)
-          //         .attr('height', d3.event.y - d3.event.subject.y)
-          //     }
-          //     this.state.active.activeLayout.items.forEach((i) => {
-          //       if (i.leftOffset > parseInt(d3.select('.selection-rect').attr('x'), 10) &&
-          //         i.leftOffset < parseInt(d3.select('.selection-rect').attr('x'), 10) + parseInt(d3.select('.selection-rect').attr('width'), 10) &&
-          //         i.topOffset > parseInt(d3.select('.selection-rect').attr('y'), 10) &&
-          //         i.topOffset < parseInt(d3.select('.selection-rect').attr('y'), 10) + parseInt(d3.select('.selection-rect').attr('height'), 10) &&
-          //         this.selectedNodes.concat(this.dragSelection).indexOf(i) === -1) {
-
-          //         this.dragSelection.push(i)
-          //       } else if (
-          //         !(i.leftOffset > parseInt(d3.select('.selection-rect').attr('x'), 10) &&
-          //           i.leftOffset < parseInt(d3.select('.selection-rect').attr('x'), 10) + parseInt(d3.select('.selection-rect').attr('width'), 10) &&
-          //           i.topOffset > parseInt(d3.select('.selection-rect').attr('y'), 10) &&
-          //           i.topOffset < parseInt(d3.select('.selection-rect').attr('y'), 10) + parseInt(d3.select('.selection-rect').attr('height'), 10)) &&
-          //         this.dragSelection.indexOf(i) !== -1
-          //       ) {
-          //         // Outside the current selection box but in the current drag selection, remove it.
-          //         this.dragSelection.splice(this.dragSelection.indexOf(i), 1)
-          //       }
-          //     })
-          //     this.$scope.$digest()
-          //     this.updateCanvas()
-          //   })
-          //   .on('end', () => {
-          //     d3.select('.selection-rect').remove()
-          //     this.dragSelection.forEach(i => this.selectedNodes.push(i))
-          //     this.dragSelection = []
-          //     this.$scope.$digest()
-          //     this.$timeout(0).then(() => this.updateCanvas())
-          //   })
-          // )
+            .call(drag()
+              .on('start', () => {
+                $scope.$apply(() => {
+                  // this.menu.hide()
+                  // this.multiMenu.hide()
+                  // this.updateMenuTooltip()
+                  this.nodeSearchRemove()
+                  if (!event.sourceEvent.shiftKey) {
+                    this.selectedNodes = []
+                  }
+                  this.updateCanvas()
+                })
+                select('.main-g')
+                  .append('rect')
+                  .classed('selection-rect', true)
+              })
+              .on('drag', () => {
+                if (event.x - event.subject.x < 0) {
+                  select('.selection-rect')
+                    .attr('x', event.x)
+                    .attr('width', event.subject.x - event.x)
+                } else {
+                  select('.selection-rect')
+                    .attr('x', event.subject.x)
+                    .attr('width', event.x - event.subject.x)
+                }
+                if (event.y - event.subject.y < 0) {
+                  select('.selection-rect')
+                    .attr('y', event.y)
+                    .attr('height', event.subject.y - event.y)
+                } else {
+                  select('.selection-rect')
+                    .attr('y', event.subject.y)
+                    .attr('height', event.y - event.subject.y)
+                }
+                $ctrl.items.forEach((i) => {
+                  if (i.leftOffset > parseInt(select('.selection-rect').attr('x'), 10) &&
+                    i.leftOffset < parseInt(select('.selection-rect').attr('x'), 10) + parseInt(select('.selection-rect').attr('width'), 10) &&
+                    i.topOffset > parseInt(select('.selection-rect').attr('y'), 10) &&
+                    i.topOffset < parseInt(select('.selection-rect').attr('y'), 10) + parseInt(select('.selection-rect').attr('height'), 10) &&
+                    $ctrl.selectedNodes.concat(dragSelection).indexOf(i) === -1) {
+                    dragSelection.push(i)
+                  } else if (
+                    !(i.leftOffset > parseInt(select('.selection-rect').attr('x'), 10) &&
+                      i.leftOffset < parseInt(select('.selection-rect').attr('x'), 10) + parseInt(select('.selection-rect').attr('width'), 10) &&
+                      i.topOffset > parseInt(select('.selection-rect').attr('y'), 10) &&
+                      i.topOffset < parseInt(select('.selection-rect').attr('y'), 10) + parseInt(select('.selection-rect').attr('height'), 10)) &&
+                    dragSelection.indexOf(i) !== -1
+                  ) {
+                    // Outside the current selection box but in the current drag selection, remove it.
+                    dragSelection.splice(dragSelection.indexOf(i), 1)
+                  }
+                })
+                $scope.$digest()
+                this.updateCanvas()
+              })
+              .on('end', () => {
+                select('.selection-rect').remove()
+                dragSelection.forEach(i => $ctrl.selectedNodes.push(i))
+                dragSelection = []
+                $scope.$digest()
+                $timeout(0).then(() => this.updateCanvas())
+              })
+            )
 
           $ctrl.updateCanvasSize()
+        }
+
+        let calculateMatchQuality = function (label, searchValue) {
+          let lowerValue = searchValue.toLowerCase()
+          let lowerLabel = label.toLowerCase()
+          if (lowerValue === lowerLabel) return 100
+          if (lowerLabel.indexOf(lowerValue) !== -1) return 10
+          return 1
         }
 
         $ctrl.nodeSearchResults = function (searchValue) {
@@ -169,25 +178,36 @@ angular.module('palladioDataPenComponent.active', [])
             let descriptionField = file.fields.filter(field => field.countDescription)[0]
             let matches = file.data.filter(row => {
               return Object.values(row).filter(value => {
-                return value.includes(searchValue)
+                return value.toLowerCase().includes(searchValue.toLowerCase())
               }).length > 0
             })
-            matches.forEach(match => {
+            matches.filter((match) => {
+              // Don't display matches that are already showing as nodes
+              return $ctrl.items.map(i => i.record).indexOf(match) === -1
+            }).forEach(match => {
               results.push({
                 type: file.label,
                 value: match[descriptionField.key],
-                data: match
+                data: match,
+                quality: calculateMatchQuality(match[descriptionField.key], searchValue)
               })
             })
+          })
+          results.sort((a, b) => {
+            if (a.quality < b.quality) return 1
+            if (a.quality > b.quality) return -1
+            return 0
           })
           return results
         }
 
         $ctrl.nodeSearchSelect = function ($item, $model, $label, $event) {
+          console.log($item, $model)
           let item = {
             id: $item.value,
             value: $item.value,
             type: $item.type,
+            record: $item.data,
             description: $item.value,
             topOffset: this.nodeSearchOffsetTop,
             leftOffset: this.nodeSearchOffsetLeft
@@ -366,16 +386,17 @@ angular.module('palladioDataPenComponent.active', [])
                 this.dragOrigY = d.topOffset
               })
               .on('drag', (d, i, group) => {
-                // let origTop = d.topOffset
-                // let origLeft = d.leftOffset
-                // ((this.selectedNodes.indexOf(d) === -1) ? [d] : this.selectedNodes).forEach((is) => {
-                //   is.leftOffset = d3.event.x + this.dragOrigX + (is.leftOffset - origLeft)
-                //   is.topOffset = d3.event.y + this.dragOrigY + (is.topOffset - origTop)
-                //   if (is.topOffset < 20) { is.topOffset = 20 }
-                //   if (is.topOffset > window.innerHeight - 75) { is.topOffset = window.innerHeight - 75 }
-                //   if (is.leftOffset < 20) { is.leftOffset = 20 }
-                //   if (is.leftOffset > window.innerWidth - 20) { is.leftOffset = window.innerWidth - 20 }
-                // })
+                let origTop = d.topOffset
+                let origLeft = d.leftOffset
+                let selectedNodes = (this.selectedNodes.indexOf(d) === -1) ? [d] : this.selectedNodes
+                selectedNodes.forEach((is) => {
+                  is.leftOffset = event.x + this.dragOrigX + (is.leftOffset - origLeft)
+                  is.topOffset = event.y + this.dragOrigY + (is.topOffset - origTop)
+                  if (is.topOffset < 20) { is.topOffset = 20 }
+                  if (is.topOffset > window.innerHeight - 75) { is.topOffset = window.innerHeight - 75 }
+                  if (is.leftOffset < 20) { is.leftOffset = 20 }
+                  if (is.leftOffset > window.innerWidth - 20) { is.leftOffset = window.innerWidth - 20 }
+                })
                 this.dragOrigX = d.leftOffset
                 this.dragOrigY = d.topOffset
                 this.updateCanvas()
@@ -428,7 +449,7 @@ angular.module('palladioDataPenComponent.active', [])
             // .classed('green', (d) => d.mark === Mark.Green)
             // .classed('blue', (d) => d.mark === Mark.Blue)
             // .classed('white', (d) => d.mark === Mark.White)
-            // .attr('filter', d => this.selectedNodes.concat(this.dragSelection).indexOf(d) !== -1 ? 'url(#drop-shadow)' : '')
+            .attr('filter', d => $ctrl.selectedNodes.concat(this.dragSelection).indexOf(d) !== -1 ? 'url(#drop-shadow)' : '')
             .transition().attr('r', (d) => {
               // if (this.showLayerEffect && d.item && d.item.localProperties.concat(d.item.remoteProperties).find(p => p.property.value === RDF.type.value)) {
               //   let layerIndex = d.item.localProperties

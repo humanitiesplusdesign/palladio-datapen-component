@@ -4,12 +4,12 @@
     button.active-circle-button(ng-init="tooltipViewOptions=''" ng-mouseenter="tooltipViewOptions='visible'" ng-mouseleave="tooltipViewOptions=''" uib-popover-template="'viewOptionsPopover.html'" popover-trigger="'outsideClick'" popover-placement="auto left-top" popover-class="active-options-popover" popover-is-open="$ctrl.viewOptionsPopoverVisible" ng-class="{true: 'button-active', false: ''}[$ctrl.viewOptionsPopoverVisible]")
       img.view-options-icon(src=require("../images/active/view_options.svg"))
       p.button-label.transition-200(ng-class="tooltipViewOptions") View Options
-    button.active-circle-button(ng-init="tooltipLayers=''" ng-mouseenter="tooltipLayers='visible'" ng-mouseleave="tooltipLayers=''" uib-popover-template="'layersPopover.html'" popover-trigger="'outsideClick'" popover-placement="auto left-top" popover-class="active-options-popover" popover-is-open="$ctrl.layersPopoverVisible" ng-class="{true: 'button-active', false: ''}[$ctrl.layersPopoverVisible]")
-      img.layers-icon(src=require("../images/active/layers.svg"))
-      p.button-label.transition-200(ng-class="tooltipLayers") Layers
-    button.active-circle-button(ng-init="tooltipSnapshots=''" ng-mouseenter="tooltipSnapshots='visible'" ng-mouseleave="tooltipSnapshots=''" uib-popover-template="'snapshotsPopover.html'" popover-trigger="'outsideClick'" popover-placement="auto left-top" popover-class="active-options-popover" popover-is-open="$ctrl.snapshotsPopoverVisible" ng-class="{true: 'button-active', false: ''}[$ctrl.snapshotsPopoverVisible]")
-      img.snapshots-icon(src=require("../images/active/snapshot.svg"))
-      p.button-label.transition-200(ng-class="tooltipSnapshots") Snapshots
+    //- button.active-circle-button(ng-init="tooltipLayers=''" ng-mouseenter="tooltipLayers='visible'" ng-mouseleave="tooltipLayers=''" uib-popover-template="'layersPopover.html'" popover-trigger="'outsideClick'" popover-placement="auto left-top" popover-class="active-options-popover" popover-is-open="$ctrl.layersPopoverVisible" ng-class="{true: 'button-active', false: ''}[$ctrl.layersPopoverVisible]")
+    //-   img.layers-icon(src=require("../images/active/layers.svg"))
+    //-   p.button-label.transition-200(ng-class="tooltipLayers") Layers
+    //- button.active-circle-button(ng-init="tooltipSnapshots=''" ng-mouseenter="tooltipSnapshots='visible'" ng-mouseleave="tooltipSnapshots=''" uib-popover-template="'snapshotsPopover.html'" popover-trigger="'outsideClick'" popover-placement="auto left-top" popover-class="active-options-popover" popover-is-open="$ctrl.snapshotsPopoverVisible" ng-class="{true: 'button-active', false: ''}[$ctrl.snapshotsPopoverVisible]")
+    //-   img.snapshots-icon(src=require("../images/active/snapshot.svg"))
+    //-   p.button-label.transition-200(ng-class="tooltipSnapshots") Snapshots
     //-button.active-circle-button(ng-init="tooltipAssistedLayouts=''" ng-mouseenter="tooltipAssistedLayouts='visible'" ng-mouseleave="tooltipAssistedLayouts=''" uib-popover-template="'layoutsPopover.html'" popover-trigger="'outsideClick'" popover-placement="auto left-top" popover-class="active-options-popover" popover-is-open="$ctrl.layoutsPopoverVisible" ng-class="{true: 'button-active', false: ''}[$ctrl.layoutsPopoverVisible]")
       img.layouts-icon(src=require("images/active/layout.svg"))
       p.button-label.transition-200(ng-class="tooltipAssistedLayouts") Assisted Layouts
@@ -27,7 +27,7 @@
 .node-search(ng-show="$ctrl.currentlyAdding")
   .input-group
     .input-group-addon.addon-left
-      i.glyphicon.glyphicon-search(ng-hide="loadingSearchResults")
+      //- i.glyphicon.glyphicon-search(ng-hide="loadingSearchResults")
       .spinner(ng-if="loadingSearchResults")
     input.form-control(
       type="text" 
@@ -52,10 +52,10 @@
           label.resultActual {{ type.labels | prefLang }}
   .no-results-container(ng-show="noResults")
     .fake-typeahead
-      label.cold-node(ng-click="$ctrl.addColdNode($ctrl.nodeSearchSelected)") Add "{{ $ctrl.nodeSearchSelected }}" as an unlinked node
+      //- label.cold-node(ng-click="$ctrl.addColdNode($ctrl.nodeSearchSelected)") Add "{{ $ctrl.nodeSearchSelected }}" as an unlinked node
       ul.list-style-none
-        li.cold-node Add "{{ $ctrl.nodeSearchSelected }}" as a new type
-        li.result-type-container-loading(ng-repeat="type in $ctrl.allClassesFiltered($ctrl.nodeSearchSelected)") 
+        //- li.cold-node Add "{{ $ctrl.nodeSearchSelected }}" as a new type
+        li.result-type-cPontainer-loading(ng-repeat="type in $ctrl.allClassesFiltered($ctrl.nodeSearchSelected)") 
           label.resultType TYPE
           label.resultActual {{ type.labels | prefLang }}
       label.no-results No Results Found!
