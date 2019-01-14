@@ -27,7 +27,7 @@
 .node-search(ng-show="$ctrl.currentlyAdding")
   .input-group
     .input-group-addon.addon-left
-      //- i.glyphicon.glyphicon-search(ng-hide="loadingSearchResults")
+      i.glyphicon.glyphicon-search(ng-hide="loadingSearchResults")
       .spinner(ng-if="loadingSearchResults")
     input.form-control(
       type="text" 
@@ -59,6 +59,10 @@
           label.resultType TYPE
           label.resultActual {{ type.labels | prefLang }}
       label.no-results No Results Found!
+#circle-menu.circle-menu(ng-click="$ctrl.hideMenuTooltip()")
+#circle-multiMenu.circle-multiMenu(ng-click="$ctrl.hideMenuTooltip()")
+#properties-menu.circle-menu
+#circle-menu-tooltip.circle-menu-tooltip {{ $ctrl.menuOperation }} {{ $ctrl.selectedNodes.length && $ctrl.circleMultiMenuVisible ? $ctrl.selectedNodes.length : 1 }} nodes
 .tooltips
 .link-tooltips
 script(type="text/ng-template" id="resultTemplate.html")

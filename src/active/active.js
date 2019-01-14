@@ -1,14 +1,16 @@
 /* global angular */
 import { select, event } from 'd3-selection'
 import { drag } from 'd3-drag'
+import cmenu from 'circular-menu'
 import 'd3-transition'
+import 'angular-ui-bootstrap'
 
-angular.module('palladioDataPenComponent.active', [])
+angular.module('palladioDataPenComponent.active', ['ui.bootstrap', 'palladioDataPenComponent.group-modal'])
   .directive('dpActive', ['palladioService', 'dataService', function (palladioService, dataService) {
     return {
       scope: {},
       template: require('./active.pug'),
-      controller: ['$scope', '$document', '$timeout', function ActiveController ($scope, $document, $timeout) {
+      controller: ['$scope', '$document', '$timeout', '$uibModal', function ActiveController ($scope, $document, $timeout, $uibModal) {
         let $ctrl = this
         $scope.$ctrl = $ctrl
         $ctrl.radiusInitial = 1
@@ -16,7 +18,12 @@ angular.module('palladioDataPenComponent.active', [])
         $ctrl.radiusBounce = 4
         $ctrl.items = []
         $ctrl.selectedNodes = []
+        $ctrl.circleMenuVisible = false
+        $ctrl.circleMultiMenuVisible = false
+        $ctrl.menuTooltip = null
         let dragSelection = []
+        let circularMenuTopOffset = 0
+        let circularMenuLeftOffset = 15
 
         $ctrl.getCanvasSize = function () {
           let s = select('.main-svg')
@@ -34,6 +41,21 @@ angular.module('palladioDataPenComponent.active', [])
           let r = select('.main-background')
           r.style('height', h)
           r.style('width', w)
+        }
+
+        let buildAndDisplayGroupMenu = function (items) {
+          let modalInstance = $uibModal.open({
+            animation: true,
+            component: 'groupModal',
+            resolve: {
+              items: function () { return items },
+              update: function () { return $ctrl.updateCanvas }
+            }
+          })
+
+          modalInstance.result.finally(() => {
+            $ctrl.updateCanvas()
+          })
         }
 
         $ctrl.appendNode = function (sel, top, left, clss) {
@@ -57,10 +79,10 @@ angular.module('palladioDataPenComponent.active', [])
         $ctrl.canvasClick = function (sel) {
           event.preventDefault()
           $scope.$apply(() => {
-            // $ctrl.menu.hide()
-            // $ctrl.multiMenu.hide()
+            $ctrl.menu.hide()
+            $ctrl.multiMenu.hide()
             // if ($ctrl.linkEndFunction) $ctrl.linkEndFunction()
-            // $ctrl.updateMenuTooltip()
+            updateMenuTooltip()
 
             if (!$ctrl.currentlyAdding) {
               $ctrl.nodeSearchSelected = ''
@@ -99,9 +121,9 @@ angular.module('palladioDataPenComponent.active', [])
             .call(drag()
               .on('start', () => {
                 $scope.$apply(() => {
-                  // this.menu.hide()
-                  // this.multiMenu.hide()
-                  // this.updateMenuTooltip()
+                  this.menu.hide()
+                  this.multiMenu.hide()
+                  updateMenuTooltip()
                   this.nodeSearchRemove()
                   if (!event.sourceEvent.shiftKey) {
                     this.selectedNodes = []
@@ -312,10 +334,10 @@ angular.module('palladioDataPenComponent.active', [])
 
           enterSel.append('circle')
             .classed('node-circle', true)
-            // .on('contextmenu', (d, i, groups) => {
-            //   d3.event.preventDefault()
-            //   this.nodeClick(d, groups)
-            // })
+            .on('contextmenu', (d, i, groups) => {
+              event.preventDefault()
+              this.nodeClick(d, groups)
+            })
             // .on('click', (d, i, groups) => {
             //   if (this.linkMode) {
             //     this.linkEndFunction(d)
@@ -470,6 +492,39 @@ angular.module('palladioDataPenComponent.active', [])
           return sel
         }
 
+        $ctrl.nodeClick = function (d, groups) {
+          $ctrl.currentMenuItem = d
+          select('#' + sanitizeId(d.value)).style('opacity', '0')
+          $ctrl.menu.hide()
+          $ctrl.multiMenu.hide()
+          if ($ctrl.selectedNodes.length > 1 && $ctrl.selectedNodes.indexOf(d) !== -1) {
+            $ctrl.multiMenu.show(getMenuPosition(d))
+          } else {
+            $ctrl.menu.show(getMenuPosition(d))
+          }
+          updateMenuTooltip(d)
+          $scope.$apply()
+        }
+
+        let getMenuPosition = function (itemState) {
+          return [
+            itemState ? itemState.leftOffset + circularMenuLeftOffset : 0,
+            itemState ? itemState.topOffset + circularMenuTopOffset : 0
+          ]
+        }
+
+        let updateMenuTooltip = function (d) {
+          $ctrl.circleMenuVisible = document.getElementById('circle-menu').classList.contains('opened-nav')
+          $ctrl.circleMultiMenuVisible = document.getElementById('circle-multiMenu').classList.contains('opened-nav')
+          if ($ctrl.circleMenuVisible || $ctrl.circleMultiMenuVisible) {
+            $ctrl.menuTooltip.style('opacity', '1')
+            $ctrl.menuTooltip.style('left', getMenuPosition(d)[0] + 'px')
+            $ctrl.menuTooltip.style('top', getMenuPosition(d)[1] + 95 + 'px')
+          } else {
+            $ctrl.menuTooltip.style('opacity', '0')
+          }
+        }
+
         $ctrl.nodeSearchLabel = function (searchResult) {
           return searchResult.value
         }
@@ -482,6 +537,121 @@ angular.module('palladioDataPenComponent.active', [])
           $timeout(1000).then(function () {
             $ctrl.buildCanvas()
             $ctrl.nodeSearch = select('.node-search')
+
+            $ctrl.menu = cmenu('#circle-menu').config({
+              background: '#ffffff',
+              backgroundHover: '#fafafa',
+              diameter: 160,
+              menus: [{
+                icon: 'link-icon',
+                title: 'Link',
+                click: () => {
+                  // this.linkNode(this.currentMenuItem)
+                }
+              }, {
+                icon: 'properties-icon',
+                title: 'Properties',
+                click: () => {
+                  buildAndDisplayGroupMenu([$ctrl.currentMenuItem])
+                }
+              }, {
+                icon: 'expand-icon',
+                title: 'Expand',
+                click: () => {
+                  // this.buildAndDisplayExpandMenu(this.currentMenuItem)
+                }
+              }, {
+                icon: 'reconcile-icon',
+                title: 'Reconcile'
+              }, {
+                icon: 'remove-icon',
+                title: 'Remove',
+                click: () => {
+                  // Need to delete
+                  $ctrl.selectedNodes = []
+                  $ctrl.updateCanvas()
+                }
+              }]
+            })
+
+            $ctrl.multiMenu = cmenu('#circle-multiMenu').config({
+              background: '#ffffff',
+              backgroundHover: '#fafafa',
+              diameter: 160,
+              menus: [{
+                icon: 'gather-icon',
+                title: 'Gather',
+                click: () => {
+                  // this.gatherNodes(this.currentMenuItem, this.selectedNodes)
+                }
+              }, {
+                icon: 'properties-icon',
+                title: 'Properties',
+                click: () => {
+                  buildAndDisplayGroupMenu($ctrl.selectedNodes)
+                }
+              }, {
+                icon: 'invert-icon',
+                title: 'Select Inverse',
+                click: () => {
+                  let oldSelection = $ctrl.selectedNodes.slice(0)
+                  $ctrl.selectedNodes = $ctrl.items.filter((i) => {
+                    return oldSelection.indexOf(i) === -1
+                  })
+                  $scope.$apply()
+                  $ctrl.updateCanvas()
+                }
+              }, {
+                icon: 'remove-icon',
+                title: 'Remove',
+                click: () => {
+                  $ctrl.selectedNodes.forEach((i) => {
+                    // Delete
+                  })
+                  $scope.$apply()
+                  $ctrl.selectedNodes = []
+                  $ctrl.updateCanvas()
+                }
+              }]
+            })
+
+            $ctrl.menuItems = $ctrl.menu._container.childNodes
+            $ctrl.multiMenuItems = $ctrl.multiMenu._container.childNodes
+            $ctrl.menuTooltip = select('.circle-menu-tooltip')
+            updateMenuTooltip()
+
+            // Wire up menu to detect hover and update the menuOperation
+            select('#circle-menu')
+              .select('ul')
+              .selectAll('li')
+              .on('mouseover', (d, i, g) => {
+                $ctrl.menuOperation = select(g[i])
+                  .select('a')
+                  .select('div')
+                  .select('.text')
+                  .text()
+                $scope.$apply()
+              })
+              .on('mouseout', () => {
+                $ctrl.menuOperation = ''
+                $scope.$apply()
+              })
+
+            select('#circle-multiMenu')
+              .select('ul')
+              .selectAll('li')
+              .on('mouseover', (d, i, g) => {
+                $ctrl.menuOperation = select(g[i])
+                  .select('a')
+                  .select('div')
+                  .select('.text')
+                  .text()
+                $scope.$apply()
+              })
+              .on('mouseout', () => {
+                $ctrl.menuOperation = ''
+                $scope.$apply()
+              })
           })
         }
 

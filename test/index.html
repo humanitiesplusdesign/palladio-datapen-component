@@ -86,7 +86,7 @@
             showAccordion: false,
             showDropArea: false,
             dimensions: components.dimensions()
-              .filter(function(d) { return ["Position", "Name", "Gender", "Birthplace"].indexOf(d.key) !== -1; })
+              .filter(function(d) { return ["Position", "Name", "Gender", "Birthplace", "Group"].indexOf(d.key) !== -1; })
           }).then(function() {
             // Do stuff after this brick is added here
           }),
@@ -111,7 +111,7 @@
             graph.source(components.dimensions().filter(function(d) {
               return d.key === 'Birthplace'; })[0]);
             graph.target(components.dimensions().filter(function(d) {
-              return d.key === 'Position'; })[0]);
+              return d.key === 'Group'; })[0]);
             graph.nodeSize(true);
             setTimeout(graph.zoomToData, 1000);
           }),
