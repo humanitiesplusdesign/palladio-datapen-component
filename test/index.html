@@ -105,11 +105,11 @@
 
           components.promiseAdd('graph', "#graph-view-here", {
             height: "500px",
-            showSettings: false
+            showSettings: true
           }).then(function(graph) {
             // Do stuff after this brick is added here
             graph.source(components.dimensions().filter(function(d) {
-              return d.key === 'Birthplace'; })[0]);
+              return d.key === 'Name'; })[0]);
             graph.target(components.dimensions().filter(function(d) {
               return d.key === 'Group'; })[0]);
             graph.nodeSize(true);
