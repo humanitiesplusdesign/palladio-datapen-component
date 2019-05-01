@@ -21,6 +21,7 @@ angular.module('palladioDataPenComponent.active', ['ui.bootstrap', 'palladioData
         $ctrl.circleMenuVisible = false
         $ctrl.circleMultiMenuVisible = false
         $ctrl.menuTooltip = null
+        $ctrl.viewOptionsShowLinks = true
         let dragSelection = []
         let circularMenuTopOffset = 0
         let circularMenuLeftOffset = 15
@@ -248,64 +249,85 @@ angular.module('palladioDataPenComponent.active', ['ui.bootstrap', 'palladioData
           $ctrl.currentlyAdding = false
         }
 
+        let calculateLinks = function() {
+          let activeItemValues = $ctrl.items.map(i => i.id)
+          let links = []
+      
+          $ctrl.items.filter(i => i.record).forEach(i => {
+            Object.entries(i.record).forEach(p => {
+              [p[1]].forEach(v => {
+                if (activeItemValues.indexOf(v) !== -1 && v !== i.id) {
+                  links.push({
+                    source: i,
+                    target: $ctrl.items[activeItemValues.indexOf(v)],
+                    prop: p[0]
+                  })
+                }
+              })
+            })
+          })
+
+          return links
+        }
+
         $ctrl.updateCanvas = function () {
           let s = select('.main-svg')
           let g = s.select('.main-g')
           let itemG = g.select('.main-g-items')
-          // let linkG = g.select('.main-g-links')
+          let linkG = g.select('.main-g-links')
 
-          // let linkSelection = linkG.selectAll('.item-link')
-          //   .data(this.calculateLinks(), (link) => {
-          //     return link.source.ids[0].value + link.target.ids[0].value + link.prop.value
-          //   })
+          let linkSelection = linkG.selectAll('.item-link')
+            .data(calculateLinks(), (link) => {
+              return link.source.id + link.target.id + link.prop
+            })
 
-          // linkSelection.exit().remove()
+          linkSelection.exit().remove()
 
-          // let linkEnterSel = linkSelection.enter()
-          //   .append('g')
-          //   .attr('id', (link) => 'link-' + this.sanitizeId(link.source.ids[0].value + link.target.ids[0].value + link.prop.value))
-          //   .classed('link', true)
-          //   .classed('item-link', true)
+          let linkEnterSel = linkSelection.enter()
+            .append('g')
+            .attr('id', (link) => 'link-' + sanitizeId(link.source.id + link.target.id + link.prop))
+            .classed('link', true)
+            .classed('item-link', true)
 
-          // linkEnterSel.append('line')
-          //   .classed('link-line', true)
-          //   .on('mouseenter', (link, i, grp) => {
-          //     d3.select('#' + this.sanitizeId(link.source.ids[0].value + link.target.ids[0].value + link.prop.value))
-          //       .style('top', (grp[i].getBoundingClientRect().top + grp[i].getBoundingClientRect().height / 2 - 10 ) + 'px')
-          //       .style('left', (grp[i].getBoundingClientRect().left + grp[i].getBoundingClientRect().width / 2) + 'px')
-          //       .style('opacity', '1')
-          //       .text(link.prop.labels.values()[0] ? link.prop.labels.values()[0].value : 'Loading...')
-          //   })
-          //   .on('mouseout', (link, i) => {
-          //     if (!this.viewOptionsShowLinkLabels) {
-          //       d3.select('#' + this.sanitizeId(link.source.ids[0].value + link.target.ids[0].value + link.prop.value)).style('opacity', '0')
-          //     }
-          //   })
+          linkEnterSel.append('line')
+            .classed('link-line', true)
+            .on('mouseenter', (link, i, grp) => {
+              d3.select('#' + sanitizeId(link.source.id + link.target.id + link.prop))
+                .style('top', (grp[i].getBoundingClientRect().top + grp[i].getBoundingClientRect().height / 2 - 10 ) + 'px')
+                .style('left', (grp[i].getBoundingClientRect().left + grp[i].getBoundingClientRect().width / 2) + 'px')
+                .style('opacity', '1')
+                .text(link.prop ? link.prop : 'Loading...')
+            })
+            .on('mouseout', (link, i) => {
+              if (!this.viewOptionsShowLinkLabels) {
+                d3.select('#' + sanitizeId(link.source.id + link.target.id + link.prop)).style('opacity', '0')
+              }
+            })
 
-          // linkSelection = linkSelection.merge(linkEnterSel)
+          linkSelection = linkSelection.merge(linkEnterSel)
 
-          // linkSelection
-          //   .attr('transform', (d) => { return 'translate(' + d.source.leftOffset + ',' + d.source.topOffset + ')' })
-          //   .style('opacity', this.viewOptionsShowLinks ? '1' : '0')
+          linkSelection
+            .attr('transform', (d) => { return 'translate(' + d.source.leftOffset + ',' + d.source.topOffset + ')' })
+            .style('opacity', $ctrl.viewOptionsShowLinks ? '1' : '0')
 
-          // linkSelection
-          //   .select('line')
-          //     .attr('x1', d => 0 + 'px' )
-          //     .attr('y1', d => 0 + 'px' )
-          //     .attr('x2', d => ( d.target.leftOffset - d.source.leftOffset ) + 'px' )
-          //     .attr('y2', d => ( d.target.topOffset - d.source.topOffset ) + 'px' )
+          linkSelection
+            .select('line')
+              .attr('x1', d => 0 + 'px' )
+              .attr('y1', d => 0 + 'px' )
+              .attr('x2', d => ( d.target.leftOffset - d.source.leftOffset ) + 'px' )
+              .attr('y2', d => ( d.target.topOffset - d.source.topOffset ) + 'px' )
 
-          // let linkTooltipSelection = d3.select('.link-tooltips')
-          //   .selectAll('.active-tooltip')
-          //   .data(this.calculateLinks(), (link) => {
-          //     return link.source.ids[0].value + link.target.ids[0].value + link.prop.value
-          //   })
+          let linkTooltipSelection = d3.select('.link-tooltips')
+            .selectAll('.active-tooltip')
+            .data(calculateLinks(), (link) => {
+              return link.source.id + link.target.id + link.prop
+            })
 
-          // linkTooltipSelection.exit().remove()
-          // linkTooltipSelection.enter()
-          //   .append('div')
-          //     .classed('active-tooltip', true)
-          //     .attr('id', (link) => this.sanitizeId(link.source.ids[0].value + link.target.ids[0].value + link.prop.value))
+          linkTooltipSelection.exit().remove()
+          linkTooltipSelection.enter()
+            .append('div')
+              .classed('active-tooltip', true)
+              .attr('id', (link) => sanitizeId(link.source.id + link.target.id + link.prop))
 
           let itemSelection = itemG.selectAll('.item-node')
             .data($ctrl.items, (it) => {
