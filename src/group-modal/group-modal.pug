@@ -9,6 +9,8 @@
         input.form-control(type="text" id="groupField" aria-describedby="groupHelpBlock" ng-model="$ctrl.groupDescription")
       label.col-md-2.control-label
         button.select-button(ng-click="$ctrl.setGroup($ctrl.groupDescription)") Apply
+    .form-group
+      span(ng-repeat="group in $ctrl.groups()") {{group}}
   br
   form.form-horizontal
     .form-group

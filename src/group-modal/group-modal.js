@@ -15,6 +15,17 @@ angular.module('palladioDataPenComponent.group-modal', [])
 
         $ctrl.close = $scope.$close
         $ctrl.resolve = $scope.$resolve
+        $ctrl.groups = () => {
+          let groups = new Set()
+          $ctrl.resolve.items.forEach(item => {
+            let key = metadata.filter(m => m.countDescription === item.type)[0].key
+            let records = data.filter(d => d[key] === item.id)
+            records.forEach(r => {
+              groupsForKeys[getIdx(r)].forEach(g => groups.add(g))
+            })
+          })
+          return groups.values()
+        }
 
         let metadata = dataService.getDataSync().metadata
         let groupDimension = metadata.filter(m => m.key === 'Group')[0]
@@ -32,7 +43,7 @@ angular.module('palladioDataPenComponent.group-modal', [])
             groupsForKeys[idx] = new Set()
           }
 
-          groupsForKeys[idx].add(d['Group'])
+          if(d['Group']) groupsForKeys[idx].add(d['Group'])
         })
 
         $ctrl.setGroup = function (grpDesc) {
@@ -70,8 +81,6 @@ angular.module('palladioDataPenComponent.group-modal', [])
 
           // Trigger Palladio update
           palladioService.update()
-
-          console.log($ctrl, $scope, dataService, palladioService)
         }
       }]
     }

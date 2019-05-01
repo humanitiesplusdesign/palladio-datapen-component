@@ -59,13 +59,16 @@
         <div class="col-md-10 col-md-offset-1" id="datapen-view-here"></div>
       </div>
       <div class="row">
+        <div class="col-md-10 col-md-offset-1" id="facet-filter-here"></div>
+      </div>
+      <div class="row">
+        <div class="col-md-10 col-md-offset-1" id="timeline-filter-here"></div>
+      </div>
+      <div class="row">
         <div class="col-md-10 col-md-offset-1" id="graph-view-here"></div>
       </div>
       <div class="row">
         <div class="col-md-10 col-md-offset-1" id="map-view-here"></div>
-      </div>
-      <div class="row">
-        <div class="col-md-10 col-md-offset-1" id="facet-filter-here"></div>
       </div>
     </div>
 
@@ -105,7 +108,7 @@
 
           components.promiseAdd('graph', "#graph-view-here", {
             height: "500px",
-            showSettings: true
+            showSettings: false
           }).then(function(graph) {
             // Do stuff after this brick is added here
             graph.source(components.dimensions().filter(function(d) {

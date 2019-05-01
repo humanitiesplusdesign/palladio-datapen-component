@@ -56,6 +56,7 @@ angular.module('palladioDataPenComponent.active', ['ui.bootstrap', 'palladioData
           modalInstance.result.finally(() => {
             $ctrl.menu.hide()
             $ctrl.multiMenu.hide()
+            updateMenuTooltip()
             $ctrl.updateCanvas()
           })
         }
